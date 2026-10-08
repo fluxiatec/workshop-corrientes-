@@ -89,7 +89,7 @@ revoke all on public.workshop_settings from anon, authenticated;
 
 -- 👇 CAMBIÁ 'cambiar-esta-clave' por tu clave de moderador (larga) y ejecutá.
 insert into public.workshop_settings (id, moderator_key_hash)
-values (1, encode(extensions.digest('cambiar-esta-clave', 'sha256'), 'hex'))
+values (1, encode(extensions.digest('niquiley2001', 'sha256'), 'hex'))
 on conflict (id) do update set moderator_key_hash = excluded.moderator_key_hash;
 
 create or replace function public.workshop_is_moderator(p_key text)
