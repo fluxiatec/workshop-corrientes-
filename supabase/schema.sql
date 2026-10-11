@@ -87,9 +87,11 @@ create table if not exists public.workshop_settings (
 alter table public.workshop_settings enable row level security;
 revoke all on public.workshop_settings from anon, authenticated;
 
--- 👇 CAMBIÁ 'cambiar-esta-clave' por tu clave de moderador (larga) y ejecutá.
+-- 👇 CAMBIÁ 'cambiar-esta-clave' por tu clave de moderador SOLO al pegarlo en el
+--    SQL Editor de Supabase. NO guardes la clave real en este archivo ni en GitHub
+--    (el repo es público). Para cambiarla después, ejecutá solo este bloque.
 insert into public.workshop_settings (id, moderator_key_hash)
-values (1, encode(extensions.digest('niquiley2001', 'sha256'), 'hex'))
+values (1, encode(extensions.digest('cambiar-esta-clave', 'sha256'), 'hex'))
 on conflict (id) do update set moderator_key_hash = excluded.moderator_key_hash;
 
 create or replace function public.workshop_is_moderator(p_key text)
