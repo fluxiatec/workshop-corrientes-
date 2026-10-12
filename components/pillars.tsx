@@ -99,11 +99,12 @@ export function PillarCards() {
   );
 }
 
-const MARQUEE_ITEMS = ["Repetitivo", "Tedioso", "Digital", "¿Por qué sigo haciéndolo yo?"];
+const MARQUEE_ITEMS = ["Repetitivo", "Tedioso", "Digital"];
 
 /** Cinta infinita con las tres ideas (movimiento continuo y sutil). */
 export function PillarMarquee({ className = "" }: { className?: string }) {
-  const row = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
+  // Se repite para cubrir pantallas anchas sin huecos.
+  const row = Array.from({ length: 4 }, () => MARQUEE_ITEMS).flat();
   return (
     <div
       aria-hidden
@@ -116,7 +117,7 @@ export function PillarMarquee({ className = "" }: { className?: string }) {
               <span key={`${copy}-${i}`} className="flex items-center">
                 <span
                   className={`headline px-[clamp(1rem,2vw,2.25rem)] text-[clamp(1.1rem,2vw,2.25rem)] whitespace-nowrap ${
-                    i % MARQUEE_ITEMS.length === 3 ? "text-gradient" : "text-cream/80 uppercase"
+                    i % MARQUEE_ITEMS.length === 1 ? "text-gradient uppercase" : "text-cream/85 uppercase"
                   }`}
                 >
                   {t}

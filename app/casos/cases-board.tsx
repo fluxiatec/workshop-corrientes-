@@ -4,7 +4,7 @@ import type { RealtimeChannel } from "@supabase/supabase-js";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Aurora, Orb } from "@/components/aurora";
 import { Odometer } from "@/components/odometer";
-import { PillarCards, PillarChips, PillarMarquee } from "@/components/pillars";
+import { PillarMarquee } from "@/components/pillars";
 import { QrCode } from "@/components/qr-code";
 import { useConfig } from "@/components/use-config";
 import { realtimeChannelName } from "@/lib/config";
@@ -366,135 +366,148 @@ export function CasesBoard() {
   const shortUrl = qrTarget?.replace(/^https?:\/\//, "") ?? "";
   const configured = config ? config.configured : true;
 
+  const showSidebar = view === "all";
+
   return (
     <div className="relative isolate min-h-dvh overflow-x-clip bg-ink text-white">
       <Aurora />
 
-      <div className="relative mx-auto w-full max-w-[120rem] px-[clamp(1rem,3.2vw,4rem)] pt-[clamp(1rem,2.6vw,3rem)] pb-28">
-        {/* Encabezado */}
-        <header className="grid items-start gap-x-10 gap-y-6 lg:grid-cols-[minmax(0,1fr)_auto]">
-          <div className="min-w-0">
+      <div
+        className={`relative grid min-h-dvh ${
+          showSidebar ? "lg:grid-cols-[minmax(24rem,31vw)_minmax(0,1fr)]" : ""
+        }`}
+      >
+        {/* Columna fija: QR protagonista + cronómetro + contador */}
+        {showSidebar && (
+          <aside className="animate-fade-in relative flex flex-col gap-[clamp(1rem,2.2vh,2rem)] px-[clamp(1rem,2.4vw,3rem)] py-[clamp(1rem,3.5vh,2.5rem)] lg:sticky lg:top-0 lg:h-dvh lg:border-r lg:border-white/10 lg:bg-white/[0.02]">
             <LiveBadge state={configured ? live : "reconnecting"} />
-            <h1 className="animate-rise headline mt-5 text-[clamp(2.6rem,5.4vw,6.25rem)]">
-              Casos <span className="text-gradient animate-gradient">de hoy</span>
-            </h1>
-            <p
-              style={{ animationDelay: "100ms" }}
-              className="animate-rise mt-3 text-[clamp(1.1rem,1.7vw,2rem)] leading-tight font-medium text-white/75"
-            >
-              ¿Qué tarea de tu trabajo te gustaría delegar?
-            </p>
-            {count > 0 && <PillarChips className="mt-5" />}
-          </div>
 
-          <div className="flex flex-wrap items-center gap-[clamp(1rem,2vw,2.5rem)] lg:justify-end">
-            <Countdown
-              timer={timer}
-              onPlay={() => changeTimer(playTimer)}
-              onPause={() => changeTimer(pauseTimer)}
-              onReset={() => changeTimer(() => initialTimer)}
-            />
-            <div className="text-right">
-              <Odometer value={count} className="headline text-[clamp(3rem,5.8vw,7rem)] text-cream" />
-              <div className="mt-1 text-[clamp(0.75rem,0.9vw,1rem)] font-bold tracking-[0.18em] text-rose uppercase">
-                {count === 1 ? "Caso recibido" : "Casos recibidos"}
+            <div className="relative flex min-h-0 flex-1 flex-col items-center justify-center">
+              <Orb className="absolute -top-[4%] -right-[14%] w-[58%] opacity-80" />
+              <div className="ring-rotating animate-pop relative w-full max-w-[min(100%,52vh)] rounded-[2rem] p-[clamp(0.5rem,0.9vw,1rem)] shadow-[0_30px_80px_-10px_rgba(0,0,0,0.65)]">
+                <QrCode text={qrTarget} className="aspect-square w-full rounded-[1.4rem]" />
+              </div>
+              <p className="headline mt-[clamp(0.75rem,2.2vh,1.5rem)] text-center text-[clamp(1.5rem,2.1vw,2.5rem)]">
+                Escaneá y <span className="text-gradient animate-gradient">contanos</span>
+              </p>
+              <p className="mt-1.5 text-center font-mono text-[clamp(0.8rem,0.95vw,1.1rem)] break-all text-rose">
+                {shortUrl}
+              </p>
+            </div>
+
+            <div className="flex items-center justify-between gap-4 rounded-[28px] border border-white/10 bg-white/[0.04] p-[clamp(0.75rem,1.2vw,1.5rem)] backdrop-blur-md">
+              <Countdown
+                timer={timer}
+                onPlay={() => changeTimer(playTimer)}
+                onPause={() => changeTimer(pauseTimer)}
+                onReset={() => changeTimer(() => initialTimer)}
+              />
+              <div className="text-right">
+                <Odometer value={count} className="headline text-[clamp(3rem,4.6vw,5.5rem)] text-cream" />
+                <div className="mt-2 text-[clamp(0.7rem,0.8vw,0.95rem)] leading-tight font-bold tracking-[0.18em] text-rose uppercase">
+                  {count === 1 ? "Caso" : "Casos"}
+                  <br />
+                  recibidos
+                </div>
               </div>
             </div>
-            {count > 0 && (
-              <div className="hidden flex-col items-center gap-1.5 sm:flex">
-                <div className="ring-rotating rounded-2xl p-1 shadow-[0_0_40px_-10px_rgba(223,182,178,0.7)]">
-                  <QrCode text={qrTarget} className="size-[clamp(5.5rem,8vw,9rem)] rounded-xl" />
-                </div>
-                <span className="max-w-[10rem] truncate font-mono text-[0.7rem] text-white/50">{shortUrl}</span>
-              </div>
-            )}
-          </div>
-        </header>
-
-        <PillarMarquee className="-mx-[clamp(1rem,3.2vw,4rem)] mt-[clamp(1.25rem,2.2vw,2.5rem)] border-y border-white/10 py-[clamp(0.6rem,1vw,1rem)]" />
-
-        {/* Barra de modo */}
-        {(selected.length > 0 || isModerator) && count > 0 && (
-          <div className="animate-fade-in mt-[clamp(1.25rem,2vw,2.25rem)] flex flex-wrap items-center gap-3">
-            {view === "all" ? (
-              <button
-                type="button"
-                onClick={() => setView("selected")}
-                disabled={selected.length === 0}
-                className="group relative inline-flex items-center gap-2.5 overflow-hidden rounded-full bg-cream px-5 py-2.5 text-sm font-bold tracking-[0.1em] text-deep uppercase shadow-[0_10px_30px_-10px_rgba(223,182,178,0.8)] transition duration-500 ease-fluid hover:-translate-y-0.5 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-white/40 disabled:shadow-none"
-              >
-                <span aria-hidden className="transition-transform group-hover:rotate-[72deg]">⭐</span>
-                {selected.length === 0
-                  ? `Seleccioná hasta ${MAX_SELECTED} casos`
-                  : `Ver ${selected.length} ${selected.length === 1 ? "caso seleccionado" : "casos seleccionados"}`}
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setView("all")}
-                className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/5 px-5 py-2.5 text-sm font-bold tracking-[0.1em] text-white uppercase backdrop-blur transition hover:bg-white/10"
-              >
-                <span aria-hidden>←</span> Volver a todos los casos
-              </button>
-            )}
-            {isModerator && view === "all" && (
-              <span className="flex items-center gap-1.5 text-sm text-white/55">
-                {Array.from({ length: MAX_SELECTED }).map((_, i) => (
-                  <span
-                    key={i}
-                    className={`size-2 rounded-full transition-colors ${i < selected.length ? "bg-rose" : "bg-white/15"}`}
-                  />
-                ))}
-                <span className="ml-1">
-                  {selected.length}/{MAX_SELECTED} seleccionados
-                </span>
-              </span>
-            )}
-          </div>
+          </aside>
         )}
 
-        <main key={view} className="animate-slide-in mt-[clamp(1.25rem,2vw,2.25rem)]">
-          {!configured ? (
-            <NotConfigured />
-          ) : loadState === "loading" ? (
-            <SkeletonGrid />
-          ) : loadState === "error" ? (
-            <ErrorState onRetry={() => void load()} />
-          ) : count === 0 ? (
-            <EmptyState qrTarget={qrTarget} shortUrl={shortUrl} />
-          ) : view === "selected" ? (
-            <SelectedView
-              cases={selected}
-              numbers={numbers}
-              isModerator={isModerator}
-              pending={pending}
-              onToggleSelect={(c) => patchCase(c, { is_selected: !c.is_selected })}
-              onHide={(c) => patchCase(c, { is_hidden: true })}
-              onBack={() => setView("all")}
-            />
-          ) : (
-            <div
-              ref={gridRef}
-              className="relative grid grid-cols-1 items-stretch gap-[clamp(0.9rem,1.3vw,1.75rem)] md:grid-cols-2 xl:grid-cols-3"
-            >
-              {visible.map((c, i) => (
-                <div key={c.id} data-flip-id={c.id} className="flex">
-                  <CaseCard
-                    c={c}
-                    number={numbers.get(c.id) ?? 0}
-                    isFresh={fresh.has(c.id)}
-                    isModerator={isModerator}
-                    isPending={pending.has(c.id)}
-                    selectionFull={selected.length >= MAX_SELECTED}
-                    enterDelay={fresh.has(c.id) ? 0 : Math.min(i, 12) * 45}
-                    onToggleSelect={() => patchCase(c, { is_selected: !c.is_selected })}
-                    onHide={() => patchCase(c, { is_hidden: true })}
-                  />
-                </div>
-              ))}
+        {/* Título + cinta + casos en vivo */}
+        <section className="relative min-w-0 px-[clamp(1rem,2.8vw,3.5rem)] pt-[clamp(1rem,3.5vh,2.5rem)] pb-28">
+          <header className="flex flex-wrap items-start justify-between gap-6">
+            <h1 className="animate-rise headline max-w-[20ch] text-[clamp(2.25rem,3.9vw,4.75rem)]">
+              ¿Qué tarea de tu trabajo te gustaría <span className="text-gradient animate-gradient">delegar?</span>
+            </h1>
+            {!showSidebar && <LiveBadge state={configured ? live : "reconnecting"} />}
+          </header>
+
+          <PillarMarquee className="-mx-[clamp(1rem,2.8vw,3.5rem)] mt-[clamp(1rem,2.4vh,2rem)] border-y border-white/10 py-[clamp(0.6rem,1.2vh,1rem)]" />
+
+          {/* Barra de modo */}
+          {(selected.length > 0 || isModerator) && count > 0 && (
+            <div className="animate-fade-in mt-[clamp(1rem,2.4vh,2rem)] flex flex-wrap items-center gap-3">
+              {view === "all" ? (
+                <button
+                  type="button"
+                  onClick={() => setView("selected")}
+                  disabled={selected.length === 0}
+                  className="group relative inline-flex items-center gap-2.5 overflow-hidden rounded-full bg-cream px-5 py-2.5 text-sm font-bold tracking-[0.1em] text-deep uppercase shadow-[0_10px_30px_-10px_rgba(223,182,178,0.8)] transition duration-500 ease-fluid hover:-translate-y-0.5 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-white/40 disabled:shadow-none"
+                >
+                  <span aria-hidden className="transition-transform group-hover:rotate-[72deg]">⭐</span>
+                  {selected.length === 0
+                    ? `Seleccioná hasta ${MAX_SELECTED} casos`
+                    : `Ver ${selected.length} ${selected.length === 1 ? "caso seleccionado" : "casos seleccionados"}`}
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setView("all")}
+                  className="inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/5 px-5 py-2.5 text-sm font-bold tracking-[0.1em] text-white uppercase backdrop-blur transition duration-500 ease-fluid hover:bg-white/10 active:scale-[0.98]"
+                >
+                  <span aria-hidden>←</span> Volver a todos los casos
+                </button>
+              )}
+              {isModerator && view === "all" && (
+                <span className="flex items-center gap-1.5 text-sm text-white/55">
+                  {Array.from({ length: MAX_SELECTED }).map((_, i) => (
+                    <span
+                      key={i}
+                      className={`size-2 rounded-full transition-colors ${i < selected.length ? "bg-rose" : "bg-white/15"}`}
+                    />
+                  ))}
+                  <span className="ml-1">
+                    {selected.length}/{MAX_SELECTED} seleccionados
+                  </span>
+                </span>
+              )}
             </div>
           )}
-        </main>
+
+          <main key={view} className="animate-slide-in mt-[clamp(1rem,2.4vh,2rem)]">
+            {!configured ? (
+              <NotConfigured />
+            ) : loadState === "loading" ? (
+              <SkeletonGrid />
+            ) : loadState === "error" ? (
+              <ErrorState onRetry={() => void load()} />
+            ) : count === 0 ? (
+              <EmptyState />
+            ) : view === "selected" ? (
+              <SelectedView
+                cases={selected}
+                numbers={numbers}
+                isModerator={isModerator}
+                pending={pending}
+                onToggleSelect={(c) => patchCase(c, { is_selected: !c.is_selected })}
+                onHide={(c) => patchCase(c, { is_hidden: true })}
+                onBack={() => setView("all")}
+              />
+            ) : (
+              <div
+                ref={gridRef}
+                className="relative grid grid-cols-1 items-stretch gap-[clamp(0.9rem,1.3vw,1.75rem)] md:grid-cols-2 min-[2400px]:grid-cols-3"
+              >
+                {visible.map((c, i) => (
+                  <div key={c.id} data-flip-id={c.id} className="flex">
+                    <CaseCard
+                      c={c}
+                      number={numbers.get(c.id) ?? 0}
+                      isFresh={fresh.has(c.id)}
+                      isModerator={isModerator}
+                      isPending={pending.has(c.id)}
+                      selectionFull={selected.length >= MAX_SELECTED}
+                      enterDelay={fresh.has(c.id) ? 0 : Math.min(i, 12) * 45}
+                      onToggleSelect={() => patchCase(c, { is_selected: !c.is_selected })}
+                      onHide={() => patchCase(c, { is_hidden: true })}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </main>
+        </section>
       </div>
 
       {unseen > 0 && view === "all" && (
@@ -595,7 +608,7 @@ function LiveBadge({ state }: { state: LiveState }) {
   const ok = state === "live";
   return (
     <div
-      className={`animate-fade-in inline-flex items-center gap-2.5 rounded-full border px-3.5 py-1.5 text-[clamp(0.7rem,0.8vw,0.85rem)] font-bold tracking-[0.2em] uppercase backdrop-blur-md transition-colors ${
+      className={`animate-fade-in inline-flex w-max self-start items-center gap-2.5 rounded-full border px-3.5 py-1.5 text-[clamp(0.7rem,0.8vw,0.85rem)] font-bold tracking-[0.2em] uppercase backdrop-blur-md transition-colors ${
         ok ? "border-white/60 bg-white/[0.04] text-white" : "border-amber-300/40 bg-amber-300/10 text-amber-200"
       }`}
       aria-live="polite"
@@ -663,44 +676,29 @@ function SelectedView({
   );
 }
 
-function EmptyState({ qrTarget, shortUrl }: { qrTarget: string | null; shortUrl: string }) {
+function EmptyState() {
   return (
-    <div className="grid min-h-[62vh] content-center gap-[clamp(2rem,4vw,4rem)] py-6">
-      <div className="flex flex-col items-center gap-[clamp(1.5rem,3vw,3.5rem)] text-center lg:flex-row lg:justify-center lg:text-left">
-        <div className="animate-float relative shrink-0">
-          <Orb className="absolute -top-[22%] -left-[30%] w-[135%] opacity-80" />
-          <div className="ring-rotating animate-pop relative rounded-[2rem] p-2 shadow-[0_30px_80px_-10px_rgba(0,0,0,0.6)]">
-            <QrCode text={qrTarget} className="size-[clamp(11rem,20vw,20rem)] rounded-[1.4rem]" />
-          </div>
-        </div>
-        <div>
-          <p className="animate-rise headline flex flex-wrap items-center justify-center gap-x-3 text-[clamp(2rem,4vw,4.5rem)] lg:justify-start">
-            Esperando los primeros casos
-            <span className="inline-flex gap-1.5" aria-hidden>
-              {[0, 1, 2].map((d) => (
-                <span
-                  key={d}
-                  className="animate-live size-[0.25em] rounded-full bg-rose"
-                  style={{ animationDelay: `${d * 0.25}s` }}
-                />
-              ))}
-            </span>
-          </p>
-          <p style={{ animationDelay: "120ms" }} className="animate-rise mt-3 text-[clamp(1.1rem,1.8vw,2rem)] text-white/75">
-            Escaneá el QR para participar.
-          </p>
-          <p style={{ animationDelay: "220ms" }} className="animate-rise mt-4 font-mono text-[clamp(0.9rem,1.1vw,1.25rem)] text-rose">
-            {shortUrl}
-          </p>
-        </div>
-      </div>
-      <div className="mx-auto w-full max-w-6xl">
-        <PillarCards />
-      </div>
+    <div className="grid min-h-[55vh] content-center py-6">
+      <p className="animate-rise headline flex flex-wrap items-center gap-x-4 text-[clamp(2.25rem,4.4vw,5.25rem)]">
+        Esperando los primeros casos
+        <span className="inline-flex gap-2" aria-hidden>
+          {[0, 1, 2].map((d) => (
+            <span key={d} className="animate-live size-[0.22em] rounded-full bg-rose" style={{ animationDelay: `${d * 0.25}s` }} />
+          ))}
+        </span>
+      </p>
+      <p
+        style={{ animationDelay: "140ms" }}
+        className="animate-rise mt-6 flex items-center gap-4 text-[clamp(1.25rem,2vw,2.25rem)] font-medium text-white/80"
+      >
+        <span aria-hidden className="hidden animate-[nudge_1.6s_var(--ease-fluid)_infinite] text-rose lg:inline">
+          ←
+        </span>
+        Escaneá el QR y contanos una tarea de tu trabajo.
+      </p>
     </div>
   );
 }
-
 function SkeletonGrid() {
   return (
     <div className="grid grid-cols-1 gap-[clamp(0.9rem,1.3vw,1.75rem)] md:grid-cols-2 xl:grid-cols-3" aria-label="Cargando casos">

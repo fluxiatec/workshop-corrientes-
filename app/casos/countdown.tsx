@@ -55,9 +55,9 @@ export function Countdown({ timer, onPlay, onPause, onReset }: Props) {
   const C = 2 * Math.PI * R;
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-4">
       <div
-        className={`relative grid size-[clamp(5.5rem,8vw,9rem)] shrink-0 place-items-center ${
+        className={`relative grid size-[clamp(10rem,12.5vw,15rem)] shrink-0 place-items-center ${
           done ? "animate-pop" : urgent ? "animate-[live_1s_ease-in-out_infinite]" : ""
         }`}
       >
@@ -68,14 +68,14 @@ export function Countdown({ timer, onPlay, onPause, onReset }: Props) {
               <stop offset="100%" stopColor="#854f6c" />
             </linearGradient>
           </defs>
-          <circle cx="50" cy="50" r={R} fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.12)" strokeWidth="6" />
+          <circle cx="50" cy="50" r={R} fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.12)" strokeWidth="5" />
           <circle
             cx="50"
             cy="50"
             r={R}
             fill="none"
             stroke={done ? "#fbe4d8" : urgent ? "#dfb6b2" : "url(#timer-grad)"}
-            strokeWidth="6"
+            strokeWidth="5"
             strokeLinecap="round"
             strokeDasharray={C}
             strokeDashoffset={done ? 0 : C * (1 - progress)}
@@ -84,12 +84,12 @@ export function Countdown({ timer, onPlay, onPause, onReset }: Props) {
         </svg>
         <div className="relative text-center">
           {done ? (
-            <span className="headline text-[clamp(1rem,1.5vw,1.7rem)] text-cream uppercase">
+            <span className="headline text-[clamp(1.6rem,2.3vw,2.75rem)] text-cream uppercase">
               ¡Tiempo!
             </span>
           ) : (
             <span
-              className={`headline text-[clamp(1.6rem,2.6vw,3rem)] tabular-nums ${
+              className={`headline text-[clamp(2.9rem,4.3vw,5rem)] tabular-nums ${
                 urgent ? "text-rose" : "text-cream"
               }`}
             >
@@ -99,7 +99,7 @@ export function Countdown({ timer, onPlay, onPause, onReset }: Props) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-2">
         {timer.status === "running" && !done ? (
           <TimerButton onClick={onPause} label="Pausar">
             <path d="M8 5v14M16 5v14" />
@@ -136,13 +136,13 @@ function TimerButton({
       onClick={onClick}
       title={label}
       aria-label={label}
-      className={`grid size-10 place-items-center rounded-full transition duration-500 ease-fluid hover:scale-110 active:scale-95 ${
+      className={`grid size-12 place-items-center rounded-full transition duration-500 ease-fluid hover:scale-110 active:scale-95 ${
         primary
           ? "bg-cream text-deep shadow-[0_0_28px_-4px_rgba(251,228,216,0.7)]"
           : "border border-white/40 bg-white/[0.04] text-white hover:bg-white/15"
       }`}
     >
-      <svg viewBox="0 0 24 24" className="size-4.5" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
         {children}
       </svg>
     </button>
