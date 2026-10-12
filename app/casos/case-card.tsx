@@ -44,23 +44,31 @@ export function CaseCard({
   const selected = c.is_selected;
 
   const surface = selected
-    ? "bg-gradient-to-br from-brand via-[#7c4fe0] to-deep text-white ring-2 ring-lilac/70 shadow-[0_30px_80px_-24px_rgba(139,92,246,0.95)]"
+    ? "bg-gradient-to-br from-mauve via-plum to-deep text-cream ring-2 ring-rose/80 shadow-[0_30px_80px_-20px_rgba(133,79,108,0.95)]"
     : isFresh
-      ? "bg-white text-ink ring-[3px] ring-lilac animate-glow shadow-[0_24px_60px_-20px_rgba(196,181,253,0.9)]"
-      : "bg-gradient-to-br from-white to-lavender text-ink ring-1 ring-white/70 shadow-[0_18px_44px_-26px_rgba(0,0,0,0.7)] hover:-translate-y-1 hover:shadow-[0_26px_60px_-26px_rgba(139,92,246,0.7)]";
+      ? "bg-white text-deep ring-[3px] ring-rose animate-glow shadow-[0_24px_60px_-20px_rgba(223,182,178,0.9)]"
+      : "bg-cream text-deep shadow-[0_20px_60px_rgba(0,0,0,0.3)] hover:-translate-y-1.5 hover:rotate-[-0.4deg] hover:shadow-[0_30px_70px_-10px_rgba(0,0,0,0.45)]";
 
   return (
     <article
       style={{ animationDelay: `${delay}ms` }}
-      className={`group animate-card-in relative flex w-full flex-col overflow-hidden rounded-[1.75rem] transition-[background-color,box-shadow,color,transform] duration-500 ${surface} ${
+      className={`group animate-card-in relative flex w-full flex-col overflow-hidden rounded-[1.75rem] transition-[background-color,box-shadow,color,transform] duration-700 ease-fluid ${surface} ${
         xl ? "p-[clamp(1.5rem,2.6vw,3.25rem)]" : "p-[clamp(1.15rem,1.5vw,1.9rem)]"
       } ${isPending ? "opacity-70" : ""}`}
     >
+      {/* Haz de luz al llegar un caso nuevo */}
+      {isFresh && !selected && (
+        <span
+          aria-hidden
+          className="animate-sweep pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-rose/45 to-transparent"
+        />
+      )}
+
       {/* Comilla decorativa */}
       <span
         aria-hidden
-        className={`font-display pointer-events-none absolute -right-1 -bottom-10 leading-none select-none ${
-          selected ? "text-white/10" : "text-lilac/25"
+        className={`headline pointer-events-none absolute -right-1 -bottom-12 select-none ${
+          selected ? "text-cream/10" : "text-rose/45"
         } ${xl ? "text-[clamp(10rem,14vw,16rem)]" : "text-[clamp(7rem,9vw,10rem)]"}`}
       >
         ”
@@ -68,22 +76,22 @@ export function CaseCard({
 
       <header className="relative flex items-center justify-between gap-3">
         <h3
-          className={`font-display min-w-0 truncate font-bold tracking-[0.1em] uppercase ${
-            selected ? "text-white" : "text-deep"
+          className={`min-w-0 truncate font-extrabold tracking-[0.08em] uppercase ${
+            selected ? "text-cream" : "text-mauve"
           } ${xl ? "text-[clamp(1.25rem,1.8vw,2.2rem)]" : "text-[clamp(1.05rem,1.2vw,1.4rem)]"}`}
         >
           {c.name}
         </h3>
         <div className="flex shrink-0 items-center gap-2">
           {isFresh && !selected && (
-            <span className="animate-pop relative overflow-hidden rounded-full bg-gradient-to-r from-brand to-periwinkle px-2.5 py-0.5 text-[0.68rem] font-bold tracking-[0.14em] text-white uppercase">
+            <span className="animate-pop relative overflow-hidden rounded-full bg-gradient-to-r from-mauve to-plum px-2.5 py-0.5 text-[0.68rem] font-bold tracking-[0.14em] text-cream uppercase">
               <span aria-hidden className="animate-shine absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-transparent via-white/50 to-transparent" />
               Nuevo
             </span>
           )}
           <span
             className={`rounded-full px-2 py-0.5 font-mono font-semibold tabular-nums ${
-              selected ? "bg-white/15 text-white/85" : "bg-lavender text-brand"
+              selected ? "bg-cream/15 text-cream/85" : "bg-rose/40 text-plum"
             } ${xl ? "text-[clamp(0.95rem,1.2vw,1.5rem)]" : "text-[clamp(0.78rem,0.9vw,1rem)]"}`}
           >
             #{number}
@@ -93,7 +101,7 @@ export function CaseCard({
 
       {selected && (
         <span
-          className={`animate-pop relative mt-3 inline-flex items-center gap-1.5 self-start rounded-full bg-white font-bold tracking-[0.14em] text-deep uppercase shadow-[0_6px_20px_-6px_rgba(255,255,255,0.6)] ${
+          className={`animate-pop relative mt-3 inline-flex items-center gap-1.5 self-start rounded-full bg-cream font-bold tracking-[0.14em] text-deep uppercase shadow-[0_6px_20px_-6px_rgba(255,255,255,0.6)] ${
             xl ? "px-3.5 py-1 text-[clamp(0.75rem,0.9vw,1rem)]" : "px-2.5 py-0.5 text-[0.7rem]"
           }`}
         >
@@ -102,7 +110,7 @@ export function CaseCard({
       )}
 
       <p
-        className={`relative mt-3 leading-snug font-medium text-pretty break-words ${
+        className={`relative mt-3 leading-snug font-semibold tracking-[-0.015em] text-pretty break-words ${
           xl ? xlTaskSize(columns, c.task.length) : "text-[clamp(1.1rem,1.4vw,1.7rem)]"
         }`}
       >
@@ -112,7 +120,7 @@ export function CaseCard({
       <footer className="relative mt-auto flex items-end justify-between gap-3 pt-4">
         <time
           dateTime={c.created_at}
-          className={`font-mono text-[0.75rem] tabular-nums ${selected ? "text-white/60" : "text-ink/40"}`}
+          className={`font-mono text-[0.75rem] tabular-nums ${selected ? "text-cream/60" : "text-deep/45"}`}
         >
           {timeFormat.format(new Date(c.created_at))}
         </time>
@@ -128,8 +136,8 @@ export function CaseCard({
                 selected
                   ? "bg-white/15 text-white hover:bg-white/25"
                   : selectionFull
-                    ? "bg-ink/5 text-ink/40"
-                    : "bg-gradient-to-r from-brand to-deep text-white hover:opacity-90"
+                    ? "bg-deep/5 text-deep/40"
+                    : "bg-gradient-to-r from-mauve to-deep text-cream hover:opacity-90"
               }`}
             >
               {selected ? "Quitar ⭐" : "⭐ Seleccionar"}
@@ -139,7 +147,7 @@ export function CaseCard({
               disabled={isPending}
               onClick={onHide}
               className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
-                selected ? "text-white/70 hover:bg-white/15" : "text-ink/50 hover:bg-ink/5 hover:text-ink"
+                selected ? "text-white/70 hover:bg-white/15" : "text-deep/55 hover:bg-deep/5 hover:text-deep"
               }`}
             >
               Ocultar

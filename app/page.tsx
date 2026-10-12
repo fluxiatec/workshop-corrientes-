@@ -1,4 +1,4 @@
-import { Aurora } from "@/components/aurora";
+import { Aurora, Orb } from "@/components/aurora";
 
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
@@ -12,26 +12,29 @@ export default function Home() {
   return (
     <div className="relative isolate min-h-dvh overflow-x-clip">
       <Aurora />
-      <main className="relative mx-auto flex min-h-dvh max-w-2xl flex-col justify-center px-5 py-12">
-        <p className="animate-rise text-xs font-bold tracking-[0.22em] text-brand uppercase">Workshop · IA</p>
-        <h1
-          style={{ animationDelay: "80ms" }}
-          className="animate-rise font-display mt-2 text-5xl leading-[0.95] font-extrabold tracking-tight text-ink uppercase"
-        >
-          ¿Qué tarea te gustaría <span className="text-shimmer animate-gradient">delegar?</span>
+      <Orb className="absolute top-[14vh] right-[6vw] w-[min(34vw,430px)] opacity-90 max-md:opacity-30 max-md:w-[70vw]" />
+      <main className="relative mx-auto flex min-h-dvh max-w-5xl flex-col justify-center px-6 py-12">
+        <span className="kicker animate-rise">Workshop</span>
+        <h1 style={{ animationDelay: "80ms" }} className="animate-rise headline mt-6 text-[clamp(3rem,7vw,6.5rem)]">
+          <span className="text-gradient animate-gradient">IA en</span>
+          <br />
+          <span className="text-gradient animate-gradient">la práctica</span>
         </h1>
-        <ul className="mt-8 grid gap-3">
+        <p style={{ animationDelay: "160ms" }} className="animate-rise mt-5 max-w-xl text-[clamp(1.1rem,1.6vw,1.5rem)] text-white/75">
+          ¿Qué tarea te gustaría delegar? Dinámica en vivo.
+        </p>
+        <ul className="mt-10 grid max-w-2xl gap-3">
           {LINKS.map((l, i) => (
-            <li key={l.href} style={{ animationDelay: `${180 + i * 90}ms` }} className="animate-rise">
+            <li key={l.href} style={{ animationDelay: `${240 + i * 90}ms` }} className="animate-rise">
               <a
                 href={BASE + l.href}
-                className="group flex items-center justify-between gap-4 rounded-2xl border border-white/80 bg-white/70 px-5 py-4 backdrop-blur-md transition hover:-translate-y-0.5 hover:border-lilac hover:shadow-[0_16px_40px_-20px_rgba(139,92,246,0.7)]"
+                className="group flex items-center justify-between gap-4 rounded-[22px] bg-cream px-6 py-4 text-deep shadow-[0_20px_60px_rgba(0,0,0,0.25)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_30px_70px_-10px_rgba(0,0,0,0.45)]"
               >
                 <span>
-                  <span className="font-display block text-lg font-bold text-ink">{l.title}</span>
-                  <span className="text-sm text-ink/60">{l.text}</span>
+                  <span className="block text-xl font-extrabold tracking-[-0.03em]">{l.title}</span>
+                  <span className="text-sm text-deep/65">{l.text}</span>
                 </span>
-                <span className="font-mono text-sm text-brand transition-transform group-hover:translate-x-1">
+                <span className="font-mono text-sm text-mauve transition-transform group-hover:translate-x-1.5">
                   {l.href} →
                 </span>
               </a>

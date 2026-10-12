@@ -2,8 +2,9 @@
 
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Aurora } from "@/components/aurora";
-import { PillarCards, PillarChips } from "@/components/pillars";
+import { Aurora, Orb } from "@/components/aurora";
+import { Odometer } from "@/components/odometer";
+import { PillarCards, PillarChips, PillarMarquee } from "@/components/pillars";
 import { QrCode } from "@/components/qr-code";
 import { useConfig } from "@/components/use-config";
 import { realtimeChannelName } from "@/lib/config";
@@ -297,7 +298,7 @@ export function CasesBoard() {
       if (Math.abs(dx) < 1 && Math.abs(dy) < 1) return;
       node.animate(
         [{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "translate(0, 0)" }],
-        { duration: 650, easing: "cubic-bezier(0.22, 1, 0.36, 1)" },
+        { duration: 800, easing: "cubic-bezier(0.32, 0.72, 0, 1)" },
       );
     });
     positions.current = next;
@@ -366,20 +367,20 @@ export function CasesBoard() {
   const configured = config ? config.configured : true;
 
   return (
-    <div className="relative isolate min-h-dvh overflow-x-clip bg-night text-white">
-      <Aurora tone="dark" />
+    <div className="relative isolate min-h-dvh overflow-x-clip bg-ink text-white">
+      <Aurora />
 
       <div className="relative mx-auto w-full max-w-[120rem] px-[clamp(1rem,3.2vw,4rem)] pt-[clamp(1rem,2.6vw,3rem)] pb-28">
         {/* Encabezado */}
         <header className="grid items-start gap-x-10 gap-y-6 lg:grid-cols-[minmax(0,1fr)_auto]">
           <div className="min-w-0">
             <LiveBadge state={configured ? live : "reconnecting"} />
-            <h1 className="animate-rise font-display mt-4 text-[clamp(2.4rem,4.8vw,5.5rem)] leading-[0.92] font-extrabold tracking-tight uppercase">
-              Casos de <span className="text-shimmer animate-gradient">hoy</span>
+            <h1 className="animate-rise headline mt-5 text-[clamp(2.6rem,5.4vw,6.25rem)]">
+              Casos <span className="text-gradient animate-gradient">de hoy</span>
             </h1>
             <p
               style={{ animationDelay: "100ms" }}
-              className="animate-rise mt-3 text-[clamp(1.1rem,1.7vw,2rem)] leading-tight font-medium text-lavender/85"
+              className="animate-rise mt-3 text-[clamp(1.1rem,1.7vw,2rem)] leading-tight font-medium text-white/75"
             >
               ¿Qué tarea de tu trabajo te gustaría delegar?
             </p>
@@ -394,26 +395,23 @@ export function CasesBoard() {
               onReset={() => changeTimer(() => initialTimer)}
             />
             <div className="text-right">
-              <div
-                key={count}
-                className="animate-pop font-display bg-gradient-to-b from-white to-lilac bg-clip-text text-[clamp(3rem,5.5vw,6.5rem)] leading-none font-extrabold text-transparent tabular-nums"
-              >
-                {count}
-              </div>
-              <div className="mt-1 text-[clamp(0.75rem,0.9vw,1rem)] font-bold tracking-[0.2em] text-lilac uppercase">
+              <Odometer value={count} className="headline text-[clamp(3rem,5.8vw,7rem)] text-cream" />
+              <div className="mt-1 text-[clamp(0.75rem,0.9vw,1rem)] font-bold tracking-[0.18em] text-rose uppercase">
                 {count === 1 ? "Caso recibido" : "Casos recibidos"}
               </div>
             </div>
             {count > 0 && (
               <div className="hidden flex-col items-center gap-1.5 sm:flex">
-                <div className="ring-rotating rounded-2xl p-1 shadow-[0_0_40px_-10px_rgba(196,181,253,0.7)]">
+                <div className="ring-rotating rounded-2xl p-1 shadow-[0_0_40px_-10px_rgba(223,182,178,0.7)]">
                   <QrCode text={qrTarget} className="size-[clamp(5.5rem,8vw,9rem)] rounded-xl" />
                 </div>
-                <span className="max-w-[10rem] truncate font-mono text-[0.7rem] text-lavender/60">{shortUrl}</span>
+                <span className="max-w-[10rem] truncate font-mono text-[0.7rem] text-white/50">{shortUrl}</span>
               </div>
             )}
           </div>
         </header>
+
+        <PillarMarquee className="-mx-[clamp(1rem,3.2vw,4rem)] mt-[clamp(1.25rem,2.2vw,2.5rem)] border-y border-white/10 py-[clamp(0.6rem,1vw,1rem)]" />
 
         {/* Barra de modo */}
         {(selected.length > 0 || isModerator) && count > 0 && (
@@ -423,7 +421,7 @@ export function CasesBoard() {
                 type="button"
                 onClick={() => setView("selected")}
                 disabled={selected.length === 0}
-                className="group relative inline-flex items-center gap-2.5 overflow-hidden rounded-full bg-white px-5 py-2.5 text-sm font-bold tracking-[0.1em] text-deep uppercase shadow-[0_10px_30px_-10px_rgba(196,181,253,0.8)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-white/40 disabled:shadow-none"
+                className="group relative inline-flex items-center gap-2.5 overflow-hidden rounded-full bg-cream px-5 py-2.5 text-sm font-bold tracking-[0.1em] text-deep uppercase shadow-[0_10px_30px_-10px_rgba(223,182,178,0.8)] transition duration-500 ease-fluid hover:-translate-y-0.5 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-white/40 disabled:shadow-none"
               >
                 <span aria-hidden className="transition-transform group-hover:rotate-[72deg]">⭐</span>
                 {selected.length === 0
@@ -440,11 +438,11 @@ export function CasesBoard() {
               </button>
             )}
             {isModerator && view === "all" && (
-              <span className="flex items-center gap-1.5 text-sm text-lavender/55">
+              <span className="flex items-center gap-1.5 text-sm text-white/55">
                 {Array.from({ length: MAX_SELECTED }).map((_, i) => (
                   <span
                     key={i}
-                    className={`size-2 rounded-full transition-colors ${i < selected.length ? "bg-lilac" : "bg-white/15"}`}
+                    className={`size-2 rounded-full transition-colors ${i < selected.length ? "bg-rose" : "bg-white/15"}`}
                   />
                 ))}
                 <span className="ml-1">
@@ -455,7 +453,7 @@ export function CasesBoard() {
           </div>
         )}
 
-        <main className="mt-[clamp(1.25rem,2vw,2.25rem)]">
+        <main key={view} className="animate-slide-in mt-[clamp(1.25rem,2vw,2.25rem)]">
           {!configured ? (
             <NotConfigured />
           ) : loadState === "loading" ? (
@@ -506,15 +504,15 @@ export function CasesBoard() {
             window.scrollTo({ top: 0, behavior: "smooth" });
             setUnseen(0);
           }}
-          className="animate-card-in fixed top-5 left-1/2 z-30 -translate-x-1/2 rounded-full bg-gradient-to-r from-brand to-periwinkle px-5 py-2.5 text-sm font-bold tracking-wide text-white shadow-xl shadow-black/30"
+          className="animate-card-in fixed top-5 left-1/2 z-30 -translate-x-1/2 rounded-full bg-gradient-to-r from-mauve to-plum px-5 py-2.5 text-sm font-bold tracking-wide text-cream shadow-xl shadow-black/30"
         >
           ↑ {unseen} {unseen === 1 ? "caso nuevo" : "casos nuevos"}
         </button>
       )}
 
       {isModerator && (
-        <div className="fixed right-4 bottom-4 z-30 flex items-center gap-1 rounded-full border border-white/10 bg-night/80 p-1 text-xs text-lavender/70 opacity-50 shadow-lg backdrop-blur-md transition hover:opacity-100 focus-within:opacity-100">
-          <span className="px-3 font-mono text-[0.68rem] tracking-wide text-lavender/50">MOD · {sessionId}</span>
+        <div className="fixed right-4 bottom-4 z-30 flex items-center gap-1 rounded-full border border-white/10 bg-ink/80 p-1 text-xs text-white/70 opacity-50 shadow-lg backdrop-blur-md transition hover:opacity-100 focus-within:opacity-100">
+          <span className="px-3 font-mono text-[0.68rem] tracking-wide text-white/45">MOD · {sessionId}</span>
           <ModButton onClick={() => setShowHidden(true)}>Ocultos ({hidden.length})</ModButton>
           <ModButton onClick={() => setConfirmReset(true)}>Reiniciar dinámica</ModButton>
           <ModButton onClick={logout}>Salir</ModButton>
@@ -523,12 +521,12 @@ export function CasesBoard() {
 
       {confirmReset && (
         <Dialog onClose={() => !resetting && setConfirmReset(false)}>
-          <h2 className="font-display text-xl font-bold text-ink">
+          <h2 className="headline text-2xl text-deep">
             ¿Seguro que querés borrar/reiniciar los casos del workshop?
           </h2>
-          <p className="mt-2 text-[0.95rem] leading-snug text-ink/70">
+          <p className="mt-2 text-[0.95rem] leading-snug text-deep/75">
             Se archivan los <strong>{cases.length}</strong> casos de la sesión{" "}
-            <code className="rounded bg-lavender px-1.5 py-0.5 text-deep">{sessionId}</code>. No se borra nada de la
+            <code className="rounded bg-rose/40 px-1.5 py-0.5 text-deep">{sessionId}</code>. No se borra nada de la
             base ni se tocan otros workshops.
           </p>
           <div className="mt-6 flex justify-end gap-2">
@@ -536,7 +534,7 @@ export function CasesBoard() {
               type="button"
               onClick={() => setConfirmReset(false)}
               disabled={resetting}
-              className="rounded-xl px-4 py-2.5 text-sm font-semibold text-ink/70 hover:bg-lavender"
+              className="rounded-xl px-4 py-2.5 text-sm font-semibold text-deep/70 hover:bg-rose/30"
             >
               Cancelar
             </button>
@@ -544,7 +542,7 @@ export function CasesBoard() {
               type="button"
               onClick={doReset}
               disabled={resetting}
-              className="rounded-xl bg-gradient-to-r from-deep to-brand px-4 py-2.5 text-sm font-bold text-white hover:opacity-90 disabled:opacity-60"
+              className="rounded-xl bg-gradient-to-r from-deep to-mauve px-4 py-2.5 text-sm font-bold text-cream hover:opacity-90 disabled:opacity-60"
             >
               {resetting ? "Reiniciando…" : "Sí, reiniciar"}
             </button>
@@ -554,21 +552,21 @@ export function CasesBoard() {
 
       {showHidden && (
         <Dialog onClose={() => setShowHidden(false)}>
-          <h2 className="font-display text-xl font-bold text-ink">Casos ocultos</h2>
-          <p className="mt-1 text-sm text-ink/60">No se muestran en pantalla. Pasá el mouse para leerlos.</p>
+          <h2 className="headline text-2xl text-deep">Casos ocultos</h2>
+          <p className="mt-1 text-sm text-deep/60">No se muestran en pantalla. Pasá el mouse para leerlos.</p>
           <ul className="mt-4 grid max-h-[50vh] gap-2 overflow-y-auto">
-            {hidden.length === 0 && <li className="text-sm text-ink/50">No hay casos ocultos.</li>}
+            {hidden.length === 0 && <li className="text-sm text-deep/50">No hay casos ocultos.</li>}
             {hidden.map((c) => (
-              <li key={c.id} className="flex items-start justify-between gap-3 rounded-xl bg-mist p-3">
+              <li key={c.id} className="flex items-start justify-between gap-3 rounded-xl bg-white/60 p-3">
                 <div className="min-w-0 blur-sm transition hover:blur-none">
                   <p className="text-xs font-bold tracking-widest text-deep uppercase">{c.name}</p>
-                  <p className="text-sm break-words text-ink/80">{c.task}</p>
+                  <p className="text-sm break-words text-deep/80">{c.task}</p>
                 </div>
                 <button
                   type="button"
                   disabled={pending.has(c.id)}
                   onClick={() => patchCase(c, { is_hidden: false })}
-                  className="shrink-0 rounded-lg border border-lilac/60 px-3 py-1.5 text-xs font-semibold text-deep hover:bg-lavender"
+                  className="shrink-0 rounded-lg border border-mauve/50 px-3 py-1.5 text-xs font-semibold text-deep hover:bg-rose/30"
                 >
                   Mostrar
                 </button>
@@ -581,7 +579,7 @@ export function CasesBoard() {
       {toast && (
         <div
           role="status"
-          className="animate-card-in fixed bottom-5 left-1/2 z-40 -translate-x-1/2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-ink shadow-2xl shadow-black/40"
+          className="animate-card-in fixed bottom-5 left-1/2 z-40 -translate-x-1/2 rounded-full bg-cream px-5 py-2.5 text-sm font-semibold text-deep shadow-2xl shadow-black/40"
         >
           {toast}
         </div>
@@ -598,7 +596,7 @@ function LiveBadge({ state }: { state: LiveState }) {
   return (
     <div
       className={`animate-fade-in inline-flex items-center gap-2.5 rounded-full border px-3.5 py-1.5 text-[clamp(0.7rem,0.8vw,0.85rem)] font-bold tracking-[0.2em] uppercase backdrop-blur-md transition-colors ${
-        ok ? "border-white/12 bg-white/[0.06] text-lavender" : "border-amber-300/40 bg-amber-300/10 text-amber-200"
+        ok ? "border-white/60 bg-white/[0.04] text-white" : "border-amber-300/40 bg-amber-300/10 text-amber-200"
       }`}
       aria-live="polite"
     >
@@ -632,8 +630,8 @@ function SelectedView({
     return (
       <div className="grid min-h-[50vh] place-items-center text-center">
         <div>
-          <p className="font-display text-[clamp(1.5rem,2.5vw,2.5rem)] font-bold">Todavía no hay casos seleccionados.</p>
-          <button type="button" onClick={onBack} className="mt-4 text-lavender/80 underline underline-offset-4">
+          <p className="headline text-[clamp(1.6rem,2.8vw,2.75rem)]">Todavía no hay casos seleccionados.</p>
+          <button type="button" onClick={onBack} className="mt-4 text-white/75 underline underline-offset-4">
             Volver a todos los casos
           </button>
         </div>
@@ -669,28 +667,29 @@ function EmptyState({ qrTarget, shortUrl }: { qrTarget: string | null; shortUrl:
   return (
     <div className="grid min-h-[62vh] content-center gap-[clamp(2rem,4vw,4rem)] py-6">
       <div className="flex flex-col items-center gap-[clamp(1.5rem,3vw,3.5rem)] text-center lg:flex-row lg:justify-center lg:text-left">
-        <div className="animate-float shrink-0">
-          <div className="ring-rotating animate-pop rounded-[2rem] p-2 shadow-[0_0_80px_-10px_rgba(196,181,253,0.65)]">
+        <div className="animate-float relative shrink-0">
+          <Orb className="absolute -top-[22%] -left-[30%] w-[135%] opacity-80" />
+          <div className="ring-rotating animate-pop relative rounded-[2rem] p-2 shadow-[0_30px_80px_-10px_rgba(0,0,0,0.6)]">
             <QrCode text={qrTarget} className="size-[clamp(11rem,20vw,20rem)] rounded-[1.4rem]" />
           </div>
         </div>
         <div>
-          <p className="animate-rise font-display flex flex-wrap items-center justify-center gap-x-3 text-[clamp(1.7rem,3.4vw,3.75rem)] leading-[1.02] font-extrabold tracking-tight uppercase lg:justify-start">
+          <p className="animate-rise headline flex flex-wrap items-center justify-center gap-x-3 text-[clamp(2rem,4vw,4.5rem)] lg:justify-start">
             Esperando los primeros casos
             <span className="inline-flex gap-1.5" aria-hidden>
               {[0, 1, 2].map((d) => (
                 <span
                   key={d}
-                  className="animate-live size-[0.3em] rounded-full bg-lilac"
+                  className="animate-live size-[0.25em] rounded-full bg-rose"
                   style={{ animationDelay: `${d * 0.25}s` }}
                 />
               ))}
             </span>
           </p>
-          <p style={{ animationDelay: "120ms" }} className="animate-rise mt-3 text-[clamp(1.1rem,1.8vw,2rem)] text-lavender/85">
+          <p style={{ animationDelay: "120ms" }} className="animate-rise mt-3 text-[clamp(1.1rem,1.8vw,2rem)] text-white/75">
             Escaneá el QR para participar.
           </p>
-          <p style={{ animationDelay: "220ms" }} className="animate-rise mt-4 font-mono text-[clamp(0.9rem,1.1vw,1.25rem)] text-lilac">
+          <p style={{ animationDelay: "220ms" }} className="animate-rise mt-4 font-mono text-[clamp(0.9rem,1.1vw,1.25rem)] text-rose">
             {shortUrl}
           </p>
         </div>
@@ -716,12 +715,12 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
   return (
     <div className="grid min-h-[50vh] place-items-center text-center">
       <div>
-        <p className="font-display text-[clamp(1.4rem,2.2vw,2.25rem)] font-bold">No pudimos cargar los casos.</p>
-        <p className="mt-2 text-lavender/70">Seguimos intentando automáticamente…</p>
+        <p className="headline text-[clamp(1.6rem,2.6vw,2.6rem)]">No pudimos cargar los casos.</p>
+        <p className="mt-2 text-white/70">Seguimos intentando automáticamente…</p>
         <button
           type="button"
           onClick={onRetry}
-          className="mt-5 rounded-full bg-white px-5 py-2.5 text-sm font-bold text-deep hover:bg-lavender"
+          className="mt-5 rounded-full bg-cream px-5 py-2.5 text-sm font-bold text-deep hover:bg-rose"
         >
           Reintentar ahora
         </button>
@@ -733,8 +732,8 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
 function NotConfigured() {
   return (
     <div className="mx-auto max-w-2xl rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-md">
-      <p className="font-display text-xl font-bold">Falta configurar Supabase</p>
-      <p className="mt-2 text-lavender/75">
+      <p className="headline text-2xl">Falta configurar Supabase</p>
+      <p className="mt-2 text-white/75">
         Completá <code>supabaseUrl</code> y <code>supabaseAnonKey</code> en <code>config.js</code> (en la raíz del
         sitio publicado) y recargá la página. Ver <code>README.md</code>.
       </p>
@@ -753,7 +752,7 @@ function ModButton({ children, onClick }: { children: React.ReactNode; onClick: 
 function Dialog({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {
   return (
     <div
-      className="animate-fade-in fixed inset-0 z-50 grid place-items-center bg-night/70 p-4 backdrop-blur-sm"
+      className="animate-fade-in fixed inset-0 z-50 grid place-items-center bg-ink/70 p-4 backdrop-blur-sm"
       onClick={onClose}
       role="presentation"
     >
@@ -761,7 +760,7 @@ function Dialog({ children, onClose }: { children: React.ReactNode; onClose: () 
         role="dialog"
         aria-modal="true"
         onClick={(e) => e.stopPropagation()}
-        className="animate-card-in w-full max-w-lg rounded-3xl bg-white p-6 shadow-2xl"
+        className="animate-card-in w-full max-w-lg rounded-[28px] bg-cream p-6 text-deep shadow-2xl"
       >
         {children}
       </div>

@@ -51,6 +51,10 @@ export function PillarIcon({ name, className = "size-6" }: { name: PillarKey; cl
   );
 }
 
+
+const ICON_TILE =
+  "grid place-items-center rounded-full bg-gradient-to-br from-mauve to-plum text-cream shadow-[0_0_24px_-4px_rgba(133,79,108,0.9)]";
+
 /** Variante compacta tipo "chips" para la pantalla proyectada. */
 export function PillarChips({ className = "" }: { className?: string }) {
   return (
@@ -59,49 +63,70 @@ export function PillarChips({ className = "" }: { className?: string }) {
         <li
           key={p.key}
           style={{ animationDelay: `${200 + i * 120}ms` }}
-          className="animate-rise group/pill relative flex items-center gap-2.5 rounded-full border border-white/12 bg-white/[0.06] py-1.5 pr-4 pl-1.5 backdrop-blur-md"
+          className="animate-rise flex items-center gap-2.5 rounded-full border border-white/25 bg-white/[0.05] py-1.5 pr-4 pl-1.5 backdrop-blur-md"
         >
-          <span className="grid size-8 place-items-center rounded-full bg-gradient-to-br from-brand to-periwinkle text-white shadow-[0_0_20px_-4px_rgba(139,92,246,0.9)]">
+          <span className={`${ICON_TILE} size-8`}>
             <PillarIcon name={p.key} className="size-4.5" />
           </span>
-          <span className="text-[clamp(0.75rem,0.85vw,1rem)] font-bold tracking-[0.16em] text-white uppercase">
+          <span className="text-[clamp(0.75rem,0.85vw,1rem)] font-bold tracking-[0.14em] text-cream uppercase">
             {p.title}
           </span>
-          <span className="hidden text-[clamp(0.75rem,0.85vw,1rem)] text-lavender/60 2xl:inline">{p.text}</span>
+          <span className="hidden text-[clamp(0.75rem,0.85vw,1rem)] text-white/55 2xl:inline">{p.text}</span>
         </li>
       ))}
     </ul>
   );
 }
 
-/** Variante tarjetas grandes (estado vacío de la pantalla proyectada). */
-export function PillarCards({ tone = "dark" }: { tone?: "dark" | "light" }) {
-  const dark = tone === "dark";
+/** Tarjetas crema grandes, como las de la slide "¿Qué tarea te gustaría poder delegar?". */
+export function PillarCards() {
   return (
-    <ul className="grid gap-[clamp(0.75rem,1.2vw,1.25rem)] sm:grid-cols-3">
+    <ul className="grid gap-[clamp(0.9rem,1.4vw,1.5rem)] sm:grid-cols-3">
       {PILLARS.map((p, i) => (
         <li
           key={p.key}
           style={{ animationDelay: `${300 + i * 140}ms` }}
-          className={`animate-rise rounded-3xl border p-[clamp(1rem,1.5vw,1.75rem)] backdrop-blur-md ${
-            dark ? "border-white/10 bg-white/[0.05]" : "border-lilac/50 bg-white/80"
-          }`}
+          className="animate-rise group rounded-[28px] bg-cream p-[clamp(1.25rem,2vw,2rem)] text-deep shadow-[0_20px_60px_rgba(0,0,0,0.25)] transition duration-500 hover:-translate-y-1.5 hover:rotate-[-0.6deg]"
         >
-          <span className="grid size-[clamp(2.5rem,3vw,3.25rem)] place-items-center rounded-2xl bg-gradient-to-br from-brand to-periwinkle text-white shadow-[0_8px_30px_-8px_rgba(139,92,246,0.9)]">
-            <PillarIcon name={p.key} className="size-[55%]" />
+          <span className={`${ICON_TILE} size-[clamp(2.75rem,3.2vw,3.5rem)] transition-transform duration-500 group-hover:scale-110`}>
+            <PillarIcon name={p.key} className="size-[52%]" />
           </span>
-          <p
-            className={`font-display mt-4 text-[clamp(1.1rem,1.6vw,1.9rem)] font-bold tracking-wide uppercase ${
-              dark ? "text-white" : "text-ink"
-            }`}
-          >
-            {p.title}
-          </p>
-          <p className={`mt-1 text-[clamp(0.9rem,1.1vw,1.25rem)] leading-snug ${dark ? "text-lavender/70" : "text-ink/65"}`}>
-            {p.text}
-          </p>
+          <p className="headline mt-5 text-[clamp(1.4rem,2vw,2.3rem)]">{p.title}</p>
+          <p className="mt-1.5 text-[clamp(0.95rem,1.15vw,1.3rem)] leading-snug text-deep/75">{p.text}</p>
         </li>
       ))}
     </ul>
+  );
+}
+
+const MARQUEE_ITEMS = ["Repetitivo", "Tedioso", "Digital", "¿Por qué sigo haciéndolo yo?"];
+
+/** Cinta infinita con las tres ideas (movimiento continuo y sutil). */
+export function PillarMarquee({ className = "" }: { className?: string }) {
+  const row = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
+  return (
+    <div
+      aria-hidden
+      className={`overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_8%,black_92%,transparent)] ${className}`}
+    >
+      <div className="animate-marquee flex w-max">
+        {[0, 1].map((copy) => (
+          <div key={copy} className="flex shrink-0 items-center">
+            {row.map((t, i) => (
+              <span key={`${copy}-${i}`} className="flex items-center">
+                <span
+                  className={`headline px-[clamp(1rem,2vw,2.25rem)] text-[clamp(1.1rem,2vw,2.25rem)] whitespace-nowrap ${
+                    i % MARQUEE_ITEMS.length === 3 ? "text-gradient" : "text-cream/80 uppercase"
+                  }`}
+                >
+                  {t}
+                </span>
+                <span className="size-2 rotate-45 rounded-[2px] bg-rose/70" />
+              </span>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }

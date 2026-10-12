@@ -64,8 +64,8 @@ export function Countdown({ timer, onPlay, onPause, onReset }: Props) {
         <svg viewBox="0 0 100 100" className="absolute inset-0 size-full -rotate-90" aria-hidden>
           <defs>
             <linearGradient id="timer-grad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#c4b5fd" />
-              <stop offset="100%" stopColor="#a5b4fc" />
+              <stop offset="0%" stopColor="#fbe4d8" />
+              <stop offset="100%" stopColor="#854f6c" />
             </linearGradient>
           </defs>
           <circle cx="50" cy="50" r={R} fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.12)" strokeWidth="6" />
@@ -74,7 +74,7 @@ export function Countdown({ timer, onPlay, onPause, onReset }: Props) {
             cy="50"
             r={R}
             fill="none"
-            stroke={done ? "#e2c6ff" : urgent ? "#fcd34d" : "url(#timer-grad)"}
+            stroke={done ? "#fbe4d8" : urgent ? "#dfb6b2" : "url(#timer-grad)"}
             strokeWidth="6"
             strokeLinecap="round"
             strokeDasharray={C}
@@ -84,13 +84,13 @@ export function Countdown({ timer, onPlay, onPause, onReset }: Props) {
         </svg>
         <div className="relative text-center">
           {done ? (
-            <span className="font-display text-[clamp(0.95rem,1.4vw,1.6rem)] leading-none font-extrabold text-orchid uppercase">
+            <span className="headline text-[clamp(1rem,1.5vw,1.7rem)] text-cream uppercase">
               ¡Tiempo!
             </span>
           ) : (
             <span
-              className={`font-display text-[clamp(1.5rem,2.4vw,2.75rem)] leading-none font-extrabold tabular-nums ${
-                urgent ? "text-amber-200" : "text-white"
+              className={`headline text-[clamp(1.6rem,2.6vw,3rem)] tabular-nums ${
+                urgent ? "text-rose" : "text-cream"
               }`}
             >
               {fmt(remaining)}
@@ -136,10 +136,10 @@ function TimerButton({
       onClick={onClick}
       title={label}
       aria-label={label}
-      className={`grid size-10 place-items-center rounded-full transition hover:scale-110 ${
+      className={`grid size-10 place-items-center rounded-full transition duration-500 ease-fluid hover:scale-110 active:scale-95 ${
         primary
-          ? "bg-gradient-to-br from-brand to-periwinkle text-white shadow-[0_0_24px_-4px_rgba(139,92,246,0.9)]"
-          : "border border-white/15 bg-white/[0.06] text-lavender hover:bg-white/15"
+          ? "bg-cream text-deep shadow-[0_0_28px_-4px_rgba(251,228,216,0.7)]"
+          : "border border-white/40 bg-white/[0.04] text-white hover:bg-white/15"
       }`}
     >
       <svg viewBox="0 0 24 24" className="size-4.5" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" aria-hidden>

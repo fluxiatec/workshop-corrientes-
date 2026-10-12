@@ -6,7 +6,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#120d2b",
+  themeColor: "#190019",
 };
 
 export default function CasosPage() {

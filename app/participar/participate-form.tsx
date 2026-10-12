@@ -37,7 +37,7 @@ function writeStored(value: SentCase | null) {
   window.dispatchEvent(new Event(STORAGE_EVENT));
 }
 
-const CONFETTI = ["#8b5cf6", "#c4b5fd", "#a5b4fc", "#e2c6ff", "#4b2a9b", "#c084fc"];
+const CONFETTI = ["#854f6c", "#dfb6b2", "#fbe4d8", "#522b5b", "#2b124c", "#ffffff"];
 
 export function ParticipateForm() {
   const storedRaw = useSyncExternalStore(subscribe, readStored, () => null);
@@ -132,7 +132,7 @@ export function ParticipateForm() {
     return (
       <section
         aria-live="polite"
-        className="animate-card-in relative mt-6 overflow-hidden rounded-[1.75rem] border border-white/80 bg-white/85 p-6 text-center shadow-[0_20px_60px_-24px_rgba(75,42,155,0.55)] backdrop-blur-xl"
+        className="animate-card-in relative mt-7 overflow-hidden rounded-[28px] bg-cream p-6 text-center text-deep shadow-[0_24px_60px_-20px_rgba(0,0,0,0.6)]"
       >
         {/* Confetti */}
         <div aria-hidden className="pointer-events-none absolute top-[4.5rem] left-1/2">
@@ -154,33 +154,33 @@ export function ParticipateForm() {
         </div>
 
         <div className="relative mx-auto grid size-18 place-items-center">
-          <span className="animate-ping-soft absolute inset-0 rounded-full bg-brand/40" />
-          <span className="animate-pop relative grid size-18 place-items-center rounded-full bg-gradient-to-br from-brand to-deep text-white shadow-[0_10px_30px_-8px_rgba(139,92,246,0.9)]">
+          <span className="animate-ping-soft absolute inset-0 rounded-full bg-mauve/40" />
+          <span className="animate-pop relative grid size-18 place-items-center rounded-full bg-gradient-to-br from-mauve to-deep text-cream shadow-[0_10px_30px_-8px_rgba(133,79,108,0.9)]">
             <svg viewBox="0 0 24 24" className="size-9" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
               <path d="M5 12.5l4.5 4.5L19 7.5" strokeDasharray="30" className="animate-draw" />
             </svg>
           </span>
         </div>
-        <h2 className="font-display animate-rise mt-5 text-4xl font-extrabold tracking-tight text-ink">¡Listo!</h2>
-        <p style={{ animationDelay: "120ms" }} className="animate-rise mt-1 text-lg font-medium text-ink/80">
+        <h2 className="headline animate-rise mt-5 text-5xl text-deep">¡Listo!</h2>
+        <p style={{ animationDelay: "120ms" }} className="animate-rise mt-1 text-lg font-medium text-deep/80">
           Tu caso ya está participando.
         </p>
-        <p style={{ animationDelay: "220ms" }} className="animate-rise mt-3 text-base text-ink/60">
+        <p style={{ animationDelay: "220ms" }} className="animate-rise mt-3 text-base text-deep/60">
           En unos segundos puede aparecer en pantalla <span className="animate-float inline-block">👀</span>
         </p>
 
         <div
           style={{ animationDelay: "320ms" }}
-          className="animate-rise mt-6 rounded-2xl border border-lavender bg-gradient-to-br from-lavender/70 to-white p-4 text-left"
+          className="animate-rise mt-6 rounded-2xl bg-white/70 p-4 text-left"
         >
           <p className="text-xs font-bold tracking-[0.16em] text-deep uppercase">{sent.name}</p>
-          <p className="mt-1 text-[0.95rem] leading-snug text-ink/80">“{sent.task}”</p>
+          <p className="mt-1 text-[0.95rem] leading-snug text-deep/80">“{sent.task}”</p>
         </div>
 
         <button
           type="button"
           onClick={sendAnother}
-          className="mt-6 text-sm font-medium text-deep/70 underline decoration-lilac underline-offset-4 hover:text-deep"
+          className="mt-6 text-sm font-medium text-deep/70 underline decoration-mauve underline-offset-4 hover:text-deep"
         >
           Enviar otro caso
         </button>
@@ -192,18 +192,18 @@ export function ParticipateForm() {
   const sending = status === "sending";
   const taskLen = task.trim().length;
   const inputClass =
-    "w-full scroll-mt-24 rounded-2xl border border-lilac/60 bg-white/70 text-[1.0625rem] text-ink placeholder:text-ink/35 transition duration-200 outline-none focus:border-brand focus:bg-white focus:shadow-[0_0_0_4px_rgba(196,181,253,0.45)] aria-invalid:border-rose-400";
+    "w-full scroll-mt-24 rounded-2xl border border-rose bg-white text-[1.0625rem] text-ink placeholder:text-deep/35 transition duration-200 outline-none focus:border-mauve focus:shadow-[0_0_0_4px_rgba(133,79,108,0.22)] aria-invalid:border-red-500";
 
   return (
     <form
       onSubmit={handleSubmit}
       noValidate
       style={{ animationDelay: "420ms" }}
-      className="animate-rise mt-6 rounded-[1.75rem] border border-white/80 bg-white/75 p-5 shadow-[0_20px_60px_-28px_rgba(75,42,155,0.55)] backdrop-blur-xl"
+      className="animate-rise mt-7 rounded-[28px] bg-cream p-5 text-deep shadow-[0_24px_60px_-20px_rgba(0,0,0,0.6)]"
     >
       <fieldset disabled={sending} className="grid gap-5">
         <div>
-          <label htmlFor="name" className="mb-1.5 block text-[0.95rem] font-semibold text-ink">
+          <label htmlFor="name" className="mb-1.5 block text-[0.95rem] font-bold text-deep">
             Nombre
           </label>
           <input
@@ -224,14 +224,14 @@ export function ParticipateForm() {
             className={`${inputClass} h-14 px-4`}
           />
           {errors.name && (
-            <p id="name-error" className="animate-fade-in mt-1.5 text-sm font-medium text-rose-600">
+            <p id="name-error" className="animate-fade-in mt-1.5 text-sm font-medium text-red-700">
               {errors.name}
             </p>
           )}
         </div>
 
         <div>
-          <label htmlFor="task" className="mb-1.5 block text-[0.95rem] font-semibold text-ink">
+          <label htmlFor="task" className="mb-1.5 block text-[0.95rem] font-bold text-deep">
             ¿Qué tarea te gustaría delegar?
           </label>
           <textarea
@@ -250,15 +250,15 @@ export function ParticipateForm() {
             className={`${inputClass} block min-h-36 resize-y px-4 py-3.5 leading-snug`}
           />
           <div id="task-hint" className="mt-1.5 flex items-start justify-between gap-3 text-sm">
-            <p className="font-medium text-rose-600">{errors.task}</p>
-            <span className={`shrink-0 font-mono tabular-nums ${taskLen > TASK_MAX - 30 ? "text-deep" : "text-ink/40"}`}>
+            <p className="font-medium text-red-700">{errors.task}</p>
+            <span className={`shrink-0 font-mono tabular-nums ${taskLen > TASK_MAX - 30 ? "text-deep" : "text-deep/45"}`}>
               {taskLen}/{TASK_MAX}
             </span>
           </div>
           {/* Barra de progreso sutil del texto */}
-          <div className="mt-1 h-1 overflow-hidden rounded-full bg-lavender">
+          <div className="mt-1 h-1 overflow-hidden rounded-full bg-rose/50">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-lilac via-brand to-periwinkle transition-[width] duration-300"
+              className="h-full rounded-full bg-gradient-to-r from-rose via-mauve to-plum transition-[width] duration-300"
               style={{ width: `${Math.min(100, (taskLen / TASK_MAX) * 100)}%` }}
             />
           </div>
@@ -273,14 +273,14 @@ export function ParticipateForm() {
         </div>
 
         {status === "error" && serverError && (
-          <div role="alert" className="animate-fade-in rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-[0.95rem] text-rose-700">
+          <div role="alert" className="animate-fade-in rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-[0.95rem] text-red-700">
             {serverError}
           </div>
         )}
 
         <button
           type="submit"
-          className="animate-gradient group relative flex h-15 w-full items-center justify-center gap-2.5 overflow-hidden rounded-2xl bg-[linear-gradient(110deg,#4b2a9b,#8b5cf6,#a78bfa,#8b5cf6,#4b2a9b)] bg-[length:220%_100%] text-[1.05rem] font-bold tracking-[0.1em] text-white uppercase shadow-[0_14px_30px_-12px_rgba(139,92,246,0.9)] transition active:scale-[0.98] disabled:cursor-wait disabled:opacity-85"
+          className="animate-gradient group relative flex h-15 w-full items-center justify-center gap-2.5 overflow-hidden rounded-2xl bg-[linear-gradient(110deg,#2b124c,#522b5b,#854f6c,#522b5b,#2b124c)] bg-[length:220%_100%] text-[1.05rem] font-bold tracking-[0.08em] text-cream uppercase shadow-[0_14px_30px_-12px_rgba(43,18,76,0.9)] transition active:scale-[0.98] disabled:cursor-wait disabled:opacity-85"
         >
           <span aria-hidden className="animate-shine absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-white/35 to-transparent" />
           {sending ? (
