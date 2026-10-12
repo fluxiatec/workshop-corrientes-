@@ -99,6 +99,16 @@ export function CaseCard({
         </div>
       </header>
 
+      {c.occupation && (
+        <p
+          className={`relative mt-1 truncate font-semibold ${selected ? "text-cream/75" : "text-plum/75"} ${
+            xl ? "text-[clamp(0.95rem,1.3vw,1.5rem)]" : "text-[clamp(0.85rem,0.95vw,1.1rem)]"
+          }`}
+        >
+          {c.occupation}
+        </p>
+      )}
+
       {selected && (
         <span
           className={`animate-pop relative mt-3 inline-flex items-center gap-1.5 self-start rounded-full bg-cream font-bold tracking-[0.14em] text-deep uppercase shadow-[0_6px_20px_-6px_rgba(255,255,255,0.6)] ${

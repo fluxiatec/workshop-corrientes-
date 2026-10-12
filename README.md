@@ -21,7 +21,10 @@ El cronómetro se sincroniza entre todas las pantallas `/casos` abiertas.
 1. Creá un proyecto en [supabase.com](https://supabase.com).
 2. Abrí [`supabase/schema.sql`](supabase/schema.sql) y reemplazá `cambiar-esta-clave` por tu clave de moderador.
 3. Pegalo completo en **SQL Editor** y ejecutalo.
-4. En **Project Settings → API** copiá la *Project URL* y la clave *anon / publishable*.
+4. Ejecutá también [`supabase/002_ocupacion_y_contactos.sql`](supabase/002_ocupacion_y_contactos.sql). Agrega el campo "¿A qué te dedicás?" y la tabla privada de contactos, y no toca la clave de moderador.
+5. En **Project Settings → API** copiá la *Project URL* y la clave *anon / publishable*.
+
+**Contactos para enviar la solución por privado:** se guardan en la tabla `workshop_contacts` (nombre, teléfono, mail, rubro y caso detallado). Desde la web solo se pueden **enviar**, nunca leer. Los ves en Supabase → **Table Editor → workshop_contacts**.
 
 ## 2. Configuración
 

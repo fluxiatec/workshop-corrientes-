@@ -349,3 +349,43 @@ blockquote {
     transform: translateX(-12px);
   }
 }
+
+/* QR: una luz que recorre el borde todo el tiempo (con resplandor) */
+.qr-comet {
+  position: relative;
+  isolation: isolate;
+}
+.qr-comet::before,
+.qr-comet::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  z-index: -1;
+  border-radius: calc(2rem + 7px);
+  background:
+    conic-gradient(
+      from var(--angle),
+      transparent 0deg,
+      transparent 220deg,
+      #854f6c 275deg,
+      #dfb6b2 320deg,
+      #ffffff 350deg,
+      transparent 360deg
+    ),
+    linear-gradient(rgba(251, 228, 216, 0.18), rgba(251, 228, 216, 0.18));
+  animation: rotate-angle 3.2s linear infinite;
+}
+.qr-comet::after {
+  inset: -14px;
+  border-radius: calc(2rem + 14px);
+  background: conic-gradient(
+    from var(--angle),
+    transparent 0deg,
+    transparent 240deg,
+    rgba(223, 182, 178, 0.9) 320deg,
+    rgba(255, 255, 255, 0.9) 350deg,
+    transparent 360deg
+  );
+  filter: blur(22px);
+  opacity: 0.85;
+}

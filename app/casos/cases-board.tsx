@@ -384,7 +384,7 @@ export function CasesBoard() {
 
             <div className="relative flex min-h-0 flex-1 flex-col items-center justify-center">
               <Orb className="absolute -top-[4%] -right-[14%] w-[58%] opacity-80" />
-              <div className="ring-rotating animate-pop relative w-full max-w-[min(100%,52vh)] rounded-[2rem] p-[clamp(0.5rem,0.9vw,1rem)] shadow-[0_30px_80px_-10px_rgba(0,0,0,0.65)]">
+              <div className="qr-comet animate-pop relative w-full max-w-[min(100%,52vh)] rounded-[2rem] bg-white p-[clamp(0.5rem,0.9vw,1rem)] shadow-[0_30px_80px_-10px_rgba(0,0,0,0.65)]">
                 <QrCode text={qrTarget} className="aspect-square w-full rounded-[1.4rem]" />
               </div>
               <p className="headline mt-[clamp(0.75rem,2.2vh,1.5rem)] text-center text-[clamp(1.5rem,2.1vw,2.5rem)]">
@@ -416,8 +416,8 @@ export function CasesBoard() {
 
         {/* Título + cinta + casos en vivo */}
         <section className="relative min-w-0 px-[clamp(1rem,2.8vw,3.5rem)] pt-[clamp(1rem,3.5vh,2.5rem)] pb-28">
-          <header className="flex flex-wrap items-start justify-between gap-6">
-            <h1 className="animate-rise headline max-w-[20ch] text-[clamp(2.25rem,3.9vw,4.75rem)]">
+          <header className="flex flex-col items-center gap-4 text-center">
+            <h1 className="animate-rise headline mx-auto max-w-[20ch] text-[clamp(2.25rem,3.9vw,4.75rem)]">
               ¿Qué tarea de tu trabajo te gustaría <span className="text-gradient animate-gradient">delegar?</span>
             </h1>
             {!showSidebar && <LiveBadge state={configured ? live : "reconnecting"} />}
@@ -525,8 +525,7 @@ export function CasesBoard() {
 
       {isModerator && (
         <div className="fixed right-4 bottom-4 z-30 flex items-center gap-1 rounded-full border border-white/10 bg-ink/80 p-1 text-xs text-white/70 opacity-50 shadow-lg backdrop-blur-md transition hover:opacity-100 focus-within:opacity-100">
-          <span className="px-3 font-mono text-[0.68rem] tracking-wide text-white/45">MOD · {sessionId}</span>
-          <ModButton onClick={() => setShowHidden(true)}>Ocultos ({hidden.length})</ModButton>
+          {hidden.length > 0 && <ModButton onClick={() => setShowHidden(true)}>Ocultos ({hidden.length})</ModButton>}
           <ModButton onClick={() => setConfirmReset(true)}>Reiniciar dinámica</ModButton>
           <ModButton onClick={logout}>Salir</ModButton>
         </div>
